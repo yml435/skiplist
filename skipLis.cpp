@@ -38,11 +38,43 @@ struct skipListNode *createSkipList(int value){
     return skNode; 
 }
 
-void liftNodes(struct skipListNode * head , struct skipListNode *insertNode ){
+bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
     
+    int skiplevelCount = 1; //因为这个跳跃表的层次至少为 1  
+    if ( head == NULL ) {
+        
+        return false ; 
+    }
+    struct skipListNode *skipLevelHead = head; //跳跃层各起始节点
+    struct skipListNode *headnode = skipLevelHead; 
+    while( headnode ->next != NULL ){ //计算跳跃表层数
     
-    
-    
+        skiplevelCount ++ ; 
+        headnode = headnode -> subLayer ; 
+    }
+    headnode = skipLevelHead ; 
+    while ( skiplevelCount > 1 )
+        
+        int skiptolevelCount = skiplevelCount; 
+        while( skiptolevelCount > 1 ){
+            
+            skiptolevelCount --; 
+            headnode = headnode -> subLayer; 
+        }
+        if ( isLiftNode() == false ){ //是否提升该节点
+        
+            return true ; 
+        }
+        
+        
+        
+        
+        
+        
+        
+        skipLevelHead -- ; 
+        
+    }
     
     
     
