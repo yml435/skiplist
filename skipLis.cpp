@@ -1,10 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<>
+#include<assert.h>
 struct skipListNode *mallocSkipListNode(){
     
     struct skipListNode * sklist= (struct skipListNode*)malloc(sizeof(struct skipListNode));
     if (sklist == NULL){
+        assert (sklist == NULL);
         return NULL ; 
     }
     memset((char*)sklist,0,sizeof(struct skipListNode);
@@ -47,13 +48,14 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
     }
     struct skipListNode *skipLevelHead = head; //跳跃层各起始节点
     struct skipListNode *headnode = skipLevelHead; 
+    struct skipListNode *subNode = insertNode ;  //保存下一层新增的节点 
     while( headnode ->next != NULL ){ //计算跳跃表层数
     
         skiplevelCount ++ ; 
         headnode = headnode -> subLayer ; 
     }
     headnode = skipLevelHead ; 
-    while ( skiplevelCount > 1 )
+    while ( skiplevelCount > 1 ) {
         
         int skiptolevelCount = skiplevelCount; 
         while( skiptolevelCount > 1 ){
@@ -65,23 +67,21 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
         
             return true ; 
         }
+        struct skipListNode *node = headnode;  //这里开始找
+        struct skipListNode *pre  = node; 
+        while(node -> value <= insertNode -> value){
+            pre = node; 
+            node = node -> next; 
+        }
+        struct skipListNode *newNode = mallocSkipListNode(); 
+        newNode -> value = insertNode -> value; 
+        newNode -> next = node ; 
+        newNode -> subLayer = subNode ; 
+        pre -> next = newNode ;  
         
-        
-        
-        
-        
-        
-        
+        subNode = newNode ; 
         skipLevelHead -- ; 
-        
     }
-    
-    
-    
-    
-    
-    
-    
     
 }
 
