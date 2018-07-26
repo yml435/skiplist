@@ -55,6 +55,7 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
         headnode = headnode -> subLayer ; 
     }
     headnode = skipLevelHead ; 
+    //这个是在已经有的层里面进行提升
     while ( skiplevelCount > 1 ) {
         
         int skiptolevelCount = skiplevelCount; 
@@ -82,6 +83,7 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
         subNode = newNode ; 
         skipLevelHead -- ; 
     }
+    //提升新的跳跃层
     
 }
 
