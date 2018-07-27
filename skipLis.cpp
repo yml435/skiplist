@@ -4,12 +4,12 @@
 
 struct skipListNode *mallocSkipListNode(){
     
-    struct skipListNode * sklist= (struct skipListNode*)malloc(sizeof(struct skipListNode));
-    if (sklist == NULL){
-        assert (sklist == NULL);
+    struct skipListNode * sklist = ( struct skipListNode*)malloc( sizeof(struct skipListNode));
+    if ( sklist == NULL){
+        assert ( sklist == NULL);
         return NULL ; 
     }
-    memset((char*)sklist,0,sizeof(struct skipListNode);
+    memset( (char*)sklist,0,sizeof(struct skipListNode));
     return sklist; 
 }
 
@@ -28,29 +28,29 @@ bool freeSkipListNode(struct skipListNode * slNode){
     return true; 
 }
 
-struct skipListNode *createSkipList(int value){
+struct skipListNode *createSkipList(){
     
     struct skipListNode *skNode = mallocSkipListNode(); 
     
     skNode -> nodeCounts = 1;  //作为开头节点这个值>=1
     skNode -> next = NULL; 
     skNode -> subLayer = NULL; 
-    skNode -> value = value; 
+    skNode -> value = MIN_INT; 
     
     return skNode; 
 }
 
-bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
+bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
     
     int skiplevelCount = 1; //因为这个跳跃表的层次至少为 1  
-    if ( head == NULL ) {
+    if ( slhead == NULL ) {
         
         return false ; 
     }
-    struct skipListNode *skipLevelHead = head; //跳跃层各起始节点
+    struct skipListNode *skipLevelHead = slhead; //跳跃层各起始节点
     struct skipListNode *headnode = skipLevelHead; 
     struct skipListNode *subNode = insertNode ;  //保存下一层新增的节点 
-    while( headnode ->next != NULL ){ //计算跳跃表层数
+    while( headnode ->next != NULL ){   //计算跳跃表层数
     
         skiplevelCount ++ ; 
         headnode = headnode -> subLayer ; 
@@ -86,7 +86,7 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
         skiplevelCount -- ; 
     }
     //提升新的跳跃层
-    headnode = head; 
+    headnode = slhead; 
     while( headnode -> next == NULL ){
         
         struct skipListNode *node = headnode; 
@@ -131,7 +131,9 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
         }
     }
 }
-
+/*
+    这里要注意一下，我们会要求插入的不会是第一个节点，也就是在初始化的时候，我们会将第一个值设得非常小
+*/
 bool insertValue(struct skipListNode *slhead,int value ){
     
     if (slhead == NULL ){
@@ -145,6 +147,7 @@ bool insertValue(struct skipListNode *slhead,int value ){
             pre = node ;  
             node = node -> next; 
         }
+        node = pre; 
         node = pre -> subLayer ; 
     } 
     

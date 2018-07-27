@@ -1,6 +1,9 @@
 #ifndef SKIP_LIST_H
 #define SKIP_LIST_H
 
+
+#define MIN_INT  -0xFFFF
+
 struct skipListNode{
     
     int value ; 
