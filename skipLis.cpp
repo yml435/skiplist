@@ -229,7 +229,42 @@ bool deleteValue(struct skipListNode **slhead,int value){
     }
 } 
 
-
+void destoryLinkListCore(struct skipListNode *list){
+    
+    destoryLinkListCore(list->next); 
+    freeSkipListNode(list); 
+}
+bool destoryLinkList(struct skipListNode *list){
+    
+    
+    
+    destoryLinkListCore()
+    
+    
+    
+    
+    
+    
+}
+bool destorySkipList(struct skipListNode *slhead ){
+    
+    if (slhead == NULL ){
+        return false; 
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
 
 
 
