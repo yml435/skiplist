@@ -9,7 +9,8 @@ struct skipListNode{
     struct skipListNode *subLayer;  //指向跳跃表的下一层节点
 }; 
 
-struct skipListNode *createSkipList() ; 
+struct skipListNode *createSkipList() ;
+bool insertValue(struct skipListNode *slhead,int value ) ;
     
 
 

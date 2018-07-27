@@ -136,16 +136,17 @@ bool insertValue(struct skipListNode *slhead,int value ){
     if (slhead == NULL ){
         return false; 
     }
-    struct skipListNode * node = slhead; 
-    struct skipListNode * pre = node ; 
+    struct skipListNode * pre = slhead ; 
+    struct skipListNode * node = pre; 
     while( node -> subLayer != NULL ){
         //这一层一直走到该插入位置
         while (( node != NULL )&&( node -> value <= value )){
             pre = node ;  
             node = node -> next; 
         }
-        node = node -> subLayer ; //往下走一层
+        node = pre -> subLayer ; 
     } 
+    
     while (( node != NULL )&&( node -> value <= value )){ //这里是对最底层的操作 
         pre = node ; 
         node = node -> next; 
@@ -163,7 +164,67 @@ bool insertValue(struct skipListNode *slhead,int value ){
     return true; 
 }
 
-
+bool deleteValue(struct skipListNode **slhead,int value){
+    
+    if (slhead == NULL || *slhead == NULL ){
+        return false; 
+    }
+    struct skipListNode *pre = *slhead; 
+    struct skipListNode *node = pre; 
+    
+    while( node -> subLayer != NULL ){
+        while( node != NULL ){
+            
+            if ( node -> value == value ){
+                if ( node == *slhead ){ //头的特殊处理
+                
+                    struct skipListNode *sklevelhead = (*slhead) -> subLayer; 
+                    struct skipListNode *tmp = *slhead ; 
+                    struct skipListNode *preskhead = *slhead; 
+                    (*slhead) = tmp -> next; 
+                    freeSkipListNode(tmp);
+                    while( sklevelhead != NULL ){
+                        
+                        tmp = sklevelhead -> next; 
+                        preskhead -> subLayer = sklevelhead ; 
+                        sklevelhead = sklevelhead -> subLayer ; 
+                    }
+                }else{
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                }
+            }
+            
+            
+            
+            pre = node ; 
+            node = node -> next; 
+        }
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+} 
 
 
 
