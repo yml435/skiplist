@@ -11,7 +11,7 @@ struct skipListNode{
 
 struct skipListNode *createSkipList() ;
 bool insertValue(struct skipListNode *slhead,int value ) ;
-    
+bool deleteValue(struct skipListNode **slhead,int value) ; 
 
 
 

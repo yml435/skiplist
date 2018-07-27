@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<assert.h>
+
 struct skipListNode *mallocSkipListNode(){
     
     struct skipListNode * sklist= (struct skipListNode*)malloc(sizeof(struct skipListNode));
