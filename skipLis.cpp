@@ -71,6 +71,7 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
         struct skipListNode *node = headnode;  //这里开始找
         struct skipListNode *pre  = node; 
         while(node -> value <= insertNode -> value){
+            
             pre = node; 
             node = node -> next; 
         }
@@ -81,13 +82,54 @@ bool liftNodes( struct skipListNode *head , struct skipListNode *insertNode ){
         pre -> next = newNode ;  
         
         subNode = newNode ; 
-        skipLevelHead -- ; 
+        skiplevelCount -- ; 
     }
     //提升新的跳跃层
-    
+    headnode = head; 
+    while( headnode -> next == NULL ){
+        
+        struct skipListNode *node = headnode; 
+        struct skipListNode *pre = node; 
+        struct skipListNode *uphead = NULL; 
+        struct skipListNode *preNode = NULL;  
+        bool  headLifted = false; 
+        while( node != NULL ){
+            
+            if ( isLiftNode() ){
+                if ( node == headnode ){
+                    
+                    headLifted = true; 
+                    uphead = mallocSkipListNode(); 
+                    uphead -> subLayer = headnode; 
+                    uphead -> value = headnode -> value;
+                    preNode = uphead;                  
+                    
+                }else {
+                    if ( headLifted == false ){
+                        
+                        uphead = mallocSkipListNode(); 
+                        uphead -> subLayer = headnode; 
+                        uphead -> value = headnode -> value;
+                        preNode = uphead;  
+                    }
+                    struct skipListNode *newnode = mallocSkipListNode(); 
+                    newnode -> value = node -> value; 
+                    newnode -> subLayer = node ; 
+                    preNode -> next = newnode; 
+                    preNode = newnode; 
+                }
+            }
+            pre = node; 
+            node = node -> next; 
+        }
+        if (preNode == NULL ){
+            break; 
+        }else{
+            
+            headnode = uphead; 
+        }
+    }
 }
-
-
 
 bool insertValue(struct skipListNode *slhead,int value ){
     
