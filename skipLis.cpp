@@ -40,7 +40,11 @@ struct skipListNode *createSkipList(){
 
 bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
     
-    int skiplevelCount = 1; //因为这个跳跃表的层次至少为 1  
+    if ( isLiftNode()){
+        
+        return false; 
+    }
+    int skiplevelCount = 0; //因为这个跳跃表的层次至少为 1  
     if ( slhead == NULL ) {
         
         return false ; 
@@ -48,39 +52,39 @@ bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
     struct skipListNode *skipLevelHead = slhead; //跳跃层各起始节点
     struct skipListNode *headnode = skipLevelHead; 
     struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
-    while( headnode ->next != NULL ){   //计算跳跃表层数
+    while( headnode != NULL ){   //计算跳跃表层数
     
         skiplevelCount ++ ; 
         headnode = headnode -> subLayer ; 
     }
-    headnode = skipLevelHead ; 
-    //这个是在已经有的层里面进行提升
-    while ( skiplevelCount > 1 ) {
+    /*
+        这里的基本方法是从最底层开始提升新插入的节点，每个层都要提升
+        这里是在已经有的跳跃层里面进行提升，这种情况下就只需要在新的
+        层级里面建立新的跳跃节点就可以了
+    */
+    headnode = skipLevelHead; 
+    while ( skiplevelCount > 1 ) { //处理至少两层的情况
         
-        int skiptolevelCount = skiplevelCount; 
-        while( skiptolevelCount > 1 ){
+        int skiptolevel = skiplevelCount - 1 ; //由于要获得“更上一层”
+        while(skiptolevel > 1){ //这里是获得该上一个跳跃层的头节点
             
-            skiptolevelCount --; 
+            skiptolevel -- ; 
             headnode = headnode -> subLayer; 
-        }
-        if ( isLiftNode() == false ){ //是否提升该节点
-        
-            return true ; 
         }
         struct skipListNode *node = headnode;  //这里开始找
         struct skipListNode *pre  = node; 
         while(node -> value <= insertNode -> value){
-            
+
             pre = node; 
             node = node -> next; 
         }
-        struct skipListNode *newNode = mallocSkipListNode(); 
-        newNode -> value = insertNode -> value; 
-        newNode -> next = node ; 
-        newNode -> subLayer = subnode ; 
-        pre -> next = newNode ;  
+        struct skipListNode *newnode = mallocSkipListNode(); 
+        newnode -> subLayer = subnode; 
+        newnode -> value = insertNode -> value; 
+        pre -> next = newnode; 
+        newnode -> next = node; 
         
-        subnode = newNode ; 
+        subnode = newnode; 
         skiplevelCount -- ; 
     }
     //提升新的跳跃层

@@ -11,6 +11,13 @@ struct skipListNode{
     struct skipListNode *subLayer;  //指向跳跃表的下一层节点
 }; 
 
+struct skipListLevelHead{ //这里每层增加了一个头节点
+    
+    struct skipListNode *nxt; 
+    int    nodeNum ; 
+    struct skipListLevelHead *subLayer; 
+    struct skipListLevelHead *upLayer; 
+}; 
 struct skipListNode *createSkipList() ;
 bool insertValue(struct skipListNode *slhead,int value ) ;
 bool deleteValue(struct skipListNode **slhead,int value) ; 
