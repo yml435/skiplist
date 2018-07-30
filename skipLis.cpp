@@ -174,7 +174,6 @@ bool insertValue(struct skipListLevelHead *slhead,int value ){
             pre = node ;  
             node = node -> next; 
         }
-        node = pre; 
         node = pre -> subLayer ; 
         levelhead = levelhead -> subLayer; 
     } 
