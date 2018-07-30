@@ -47,7 +47,7 @@ bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
     }
     struct skipListNode *skipLevelHead = slhead; //跳跃层各起始节点
     struct skipListNode *headnode = skipLevelHead; 
-    struct skipListNode *subNode = insertNode ;  //保存下一层新增的节点 
+    struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
     while( headnode ->next != NULL ){   //计算跳跃表层数
     
         skiplevelCount ++ ; 
@@ -77,10 +77,10 @@ bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
         struct skipListNode *newNode = mallocSkipListNode(); 
         newNode -> value = insertNode -> value; 
         newNode -> next = node ; 
-        newNode -> subLayer = subNode ; 
+        newNode -> subLayer = subnode ; 
         pre -> next = newNode ;  
         
-        subNode = newNode ; 
+        subnode = newNode ; 
         skiplevelCount -- ; 
     }
     //提升新的跳跃层
