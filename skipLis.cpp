@@ -31,8 +31,6 @@ bool freeSkipListNode(struct skipListNode * slNode){
 struct skipListNode *createSkipList(){
     
     struct skipListNode *skNode = mallocSkipListNode(); 
-    
-    skNode -> nodeCounts = 1;  //作为开头节点这个值>=1
     skNode -> next = NULL; 
     skNode -> subLayer = NULL; 
     skNode -> value = MIN_INT; 
