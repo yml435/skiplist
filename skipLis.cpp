@@ -12,7 +12,20 @@ struct skipListNode *mallocSkipListNode(){
     memset( (char*)sklist,0,sizeof(struct skipListNode));
     return sklist; 
 }
-
+struct skipListLevelHead *mallocSkipListHead(){
+    
+    struct skipListLevelHead * slhead = ( struct skipListLevelHead*)malloc( sizeof(struct skipListLevelHead));
+    if (slhead == NULL){
+        assert( slhead ==NULL );
+        return NULL ; 
+    }
+    slhead -> nxt = NULL; 
+    slhead -> nodeNum = 0; 
+    slhead -> subLayer = NULL; 
+    slhead -> upLayer = NULL; 
+    return slhead ; 
+    
+}
 bool isLiftNode(){
     
     return (rand()%2) == 1 ? true : false ; 
@@ -27,18 +40,21 @@ bool freeSkipListNode(struct skipListNode * slNode){
     free(slNode);
     return true; 
 }
-
-struct skipListNode *createSkipList(){
+bool freeSkipListHead (struct skipListLevelHead *slhead){
     
-    struct skipListNode *skNode = mallocSkipListNode(); 
-    skNode -> next = NULL; 
-    skNode -> subLayer = NULL; 
-    skNode -> value = MIN_INT; 
-    
-    return skNode; 
+    if (slhead == NULL ){
+        return false ; 
+    }
+    free(slhead);
+    return true; 
 }
 
-bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
+struct skipListLevelHead *createSkipList(){
+    
+    return  mallocSkipListHead();     
+}
+
+bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNode ){
     
     if ( isLiftNode()){
         
@@ -49,8 +65,7 @@ bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
         
         return false ; 
     }
-    struct skipListNode *skipLevelHead = slhead; //跳跃层各起始节点
-    struct skipListNode *headnode = skipLevelHead; 
+    struct skipListLevelHead *headnode = slhead ; 
     struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
     while( headnode != NULL ){   //计算跳跃表层数
     
@@ -62,8 +77,8 @@ bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
         这里是在已经有的跳跃层里面进行提升，这种情况下就只需要在新的
         层级里面建立新的跳跃节点就可以了
     */
-    headnode = skipLevelHead; 
-    while ( skiplevelCount > 1 ) { //处理至少两层的情况
+    headnode = slhead; 
+    while ( skiplevelCount > 1 ) { //处理至少两层的情况,因为这里在已经存在的表层里面提升
         
         int skiptolevel = skiplevelCount - 1 ; //由于要获得“更上一层”
         while(skiptolevel > 1){ //这里是获得该上一个跳跃层的头节点
@@ -136,36 +151,42 @@ bool liftNodes( struct skipListNode *slhead , struct skipListNode *insertNode ){
 /*
     这里要注意一下，我们会要求插入的不会是第一个节点，也就是在初始化的时候，我们会将第一个值设得非常小
 */
-bool insertValue(struct skipListNode *slhead,int value ){
+bool insertValue(struct skipListLevelHead *slhead,int value ){
     
-    if (slhead == NULL ){
+    if (slhead  == NULL ){
         return false; 
     }
-    struct skipListNode * pre = slhead ; 
+    struct skipListNode * insertNode = mallocSkipListNode();
+    insertNode -> value = value; 
+    
+    if (slhead -> next == NULL ){ //对空的跳跃表的处理
+        
+        slhead -> next = insertNode ; 
+        slhead -> nodeNum ++ ; 
+        liftNodes(slhead,insertNode); 
+        return true; 
+    }
+    struct skipListLevelHead *levelhead = slhead; 
+    struct skipListNode * pre = levelhead -> next ; 
     struct skipListNode * node = pre; 
-    while( node -> subLayer != NULL ){
-        //这一层一直走到该插入位置
+    while( node -> subLayer != NULL ){  //因为插入是插入到最底层，最底层的长度肯定比上面长度要长的
         while (( node != NULL )&&( node -> value <= value )){
             pre = node ;  
             node = node -> next; 
         }
         node = pre; 
         node = pre -> subLayer ; 
+        levelhead = levelhead -> subLayer; 
     } 
     
-    while (( node != NULL )&&( node -> value <= value )){ //这里是对最底层的操作 
+    while (( node != NULL )&&( node -> value <= value )){  //这里是对最底层的操作 
         pre = node ; 
         node = node -> next; 
     }
-  
-    struct skipListNode * insertNode = mallocSkipListNode();
-    insertNode -> value = value; 
-    insertNode -> next = node; 
-    insertNode -> subLayer = NULL; 
-    
-    pre -> next = insertNode; //插入这个新的节点
-    
-    liftNodes(slhead,insertNode); //这里就是提升节点,是否产生新的跳跃层等
+    insertNode -> next = node;
+    pre -> next = insertNode; 
+    levelhead -> nodeNum ++ ;
+    liftNodes(slhead,insertNode); 
     
     return true; 
 }
