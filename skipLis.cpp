@@ -60,14 +60,14 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         
         return false; 
     }
-    int skiplevelCount = 0; //因为这个跳跃表的层次至少为 1  
+    int skiplevelCount = 1; //因为这个跳跃表的层次至少为 1  
     if ( slhead == NULL ) {
         
         return false ; 
     }
     struct skipListLevelHead *headnode = slhead ; 
     struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
-    while( headnode != NULL ){   //计算跳跃表层数
+    while( headnode -> subLayer != NULL ){   //计算跳跃表层数
     
         skiplevelCount ++ ; 
         headnode = headnode -> subLayer ; 
@@ -77,16 +77,10 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         这里是在已经有的跳跃层里面进行提升，这种情况下就只需要在新的
         层级里面建立新的跳跃节点就可以了
     */
-    headnode = slhead; 
-    while ( skiplevelCount > 1 ) { //处理至少两层的情况,因为这里在已经存在的表层里面提升
+    while ( headnode != slhead ) { //处理至少两层的情况,因为这里在已经存在的表层里面提升
         
-        int skiptolevel = skiplevelCount - 1 ; //由于要获得“更上一层”
-        while(skiptolevel > 1){ //这里是获得该上一个跳跃层的头节点
-            
-            skiptolevel -- ; 
-            headnode = headnode -> subLayer; 
-        }
-        struct skipListNode *node = headnode;  //这里开始找
+        headnode = headnode -> upLayer ; 
+        struct skipListNode *node = headnode->next;  //这里开始找
         struct skipListNode *pre  = node; 
         while(node -> value <= insertNode -> value){
 
@@ -100,10 +94,8 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         newnode -> next = node; 
         
         subnode = newnode; 
-        skiplevelCount -- ; 
     }
     //提升新的跳跃层
-    headnode = slhead; 
     while( headnode -> next == NULL ){
         
         struct skipListNode *node = headnode; 
