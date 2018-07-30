@@ -68,8 +68,7 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
     struct skipListLevelHead *headnode = slhead ; 
     struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
     while( headnode -> subLayer != NULL ){   //计算跳跃表层数
-    
-        skiplevelCount ++ ; 
+
         headnode = headnode -> subLayer ; 
     }
     /*
