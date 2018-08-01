@@ -202,21 +202,36 @@ bool deleteValue(struct skipListLevelHead *slhead,int value){
         }
         if (levelhead -> next == NULL ){
             
-            
-            
+            if (levelhead -> upLayer != NULL ){
+                levelhead -> upLayer -> subLayer = levelhead -> subLayer ; 
+            }
+            if (levelhead -> subLayer != NULL ){
+                levelhead -> subLayer -> upLayer = levelhead -> upLayer ; 
+            }
         }
-        levelhead = levelhead -> next ; 
+        levelhead = levelhead -> subLayer ; 
     }
 } 
-
-void destoryLinkList(struct skipListNode *list_node){
+void destorySkipList(struct skipListNode* sknode ){
+    
+    if (sknode == NULL ){
+        return ; 
+    }
+    skipListNode * nxtsknode = sknode -> next ; 
+    freeSkipListNode(sknode); 
+    destorySkipList(nxtsknode); 
+}
+void destoryLinkList(struct skipListLevelHead *sklist){
     
     if (list == NULL ){
         return ; 
     }
-    skipListNode *nxtsl_node= list -> next ;
-    freeSkipListNode(list_node) ;
-    destoryLinkList(nxtsl_node) ; 
+    struct skipListLevelHead *levelhead = sklist ; 
+    while ( levelhead != NULL ){
+        
+        destorySkipList(levelhead -> next ); 
+        levelhead = levelhead -> next ; 
+    }
 }
 
 

@@ -21,6 +21,6 @@ struct skipListLevelHead{   //这里每层增加了一个头节点
 struct skipListNode *createSkipList() ;
 bool insertValue(struct skipListLevelHead *slhead,int value ); 
 bool deleteValue(struct skipListLevelHead *slhead,int value) ; 
-void destoryLinkList(struct skipListNode *list_node) ; 
+void destoryLinkList(struct skipListLevelHead *slhead) ; 
 
 #endif 
