@@ -74,12 +74,12 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
     /*
         这里的基本方法是从最底层开始提升新插入的节点，每个层都要提升
         这里是在已经有的跳跃层里面进行提升，这种情况下就只需要在新的
-        层级里面建立新的跳跃节点就可以了
+        层级里面建立新的跳跃节点就可以了。
     */
     while ( headnode != slhead ) { //处理至少两层的情况,因为这里在已经存在的表层里面提升
         
         headnode = headnode -> upLayer ; 
-        struct skipListNode *node = headnode->next;  //这里开始找
+        struct skipListNode *node = headnode->next;  
         struct skipListNode *pre  = node; 
         while(node -> value <= insertNode -> value){
 
@@ -91,57 +91,41 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         newnode -> value = insertNode -> value; 
         pre -> next = newnode; 
         newnode -> next = node; 
-        
+        headnode -> nodeNum ++ ; 
         subnode = newnode; 
     }
-    //提升新的跳跃层
-    while( headnode -> next == NULL ){
+    //这里开始提升新的跳跃层，如果最上层的节点数目大于SKIPLEVEL_THRESHOLD
+    
+    if ( slhead -> nodeNum > SKIPLEVEL_THRESHOLD ){
         
-        struct skipListNode *node = headnode; 
-        struct skipListNode *pre = node; 
-        struct skipListNode *uphead = NULL; 
-        struct skipListNode *preNode = NULL;  
-        bool  headLifted = false; 
-        while( node != NULL ){
+        struct skipListLevelHead *levelhead = mallocSkipListHead(); 
+        levelhead -> subLayer = slhead ; 
+        levelhead -> subLayer -> upLayer = levelhead ; 
+        struct skipListNode *downnode = slhead -> next ;
+        struct skipListNode *pre = levelhead -> next; 
+        while (downnode != NULL ){
             
-            if ( isLiftNode() ){
-                if ( node == headnode ){
-                    
-                    headLifted = true; 
-                    uphead = mallocSkipListNode(); 
-                    uphead -> subLayer = headnode; 
-                    uphead -> value = headnode -> value;
-                    preNode = uphead;                  
-                    
-                }else {
-                    if ( headLifted == false ){
-                        
-                        uphead = mallocSkipListNode(); 
-                        uphead -> subLayer = headnode; 
-                        uphead -> value = headnode -> value;
-                        preNode = uphead;  
-                    }
-                    struct skipListNode *newnode = mallocSkipListNode(); 
-                    newnode -> value = node -> value; 
-                    newnode -> subLayer = node ; 
-                    preNode -> next = newnode; 
-                    preNode = newnode; 
-                }
+            if ( isLiftNode() == false ){
+                downnode = downnode -> next ; 
+                continue ; 
             }
-            pre = node; 
-            node = node -> next; 
+            struct *newnode = mallocSkipListNode(); 
+            newnode -> value = downnode -> value ; 
+            newnode -> subLayer = downnode; 
+            if ( levelhead -> next == NULL ){
+                
+                levelhead -> next = newnode ;
+            } else {
+                pre -> next = newnode ; 
+            }
+            levelhead -> nodeNum ++ ; 
+            pre = newnode ; 
+            downnode = downnode -> next; 
         }
-        if (preNode == NULL ){
-            break; 
-        }else{
-            
-            headnode = uphead; 
-        }
+        
     }
 }
-/*
-    这里要注意一下，我们会要求插入的不会是第一个节点，也就是在初始化的时候，我们会将第一个值设得非常小
-*/
+
 bool insertValue(struct skipListLevelHead *slhead,int value ){
     
     if (slhead  == NULL ){
@@ -181,12 +165,12 @@ bool insertValue(struct skipListLevelHead *slhead,int value ){
     return true; 
 }
 
-bool deleteValue(struct skipListNode **slhead,int value){
+bool deleteValue(struct skipListLevelHead *slhead,int value){
     
     if (slhead == NULL || *slhead == NULL ){
         return false; 
     }
-    struct skipListNode *node = *slhead; 
+    struct skipListNode *node = slhead -> next; 
     
     while( node -> subLayer != NULL ){
         while( node != NULL ){
