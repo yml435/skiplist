@@ -167,62 +167,45 @@ bool insertValue(struct skipListLevelHead *slhead,int value ){
 
 bool deleteValue(struct skipListLevelHead *slhead,int value){
     
-    if (slhead == NULL || *slhead == NULL ){
+    if (slhead == NULL ){
         return false; 
     }
-    struct skipListNode *node = slhead -> next; 
-    
-    while( node -> subLayer != NULL ){
-        while( node != NULL ){
-            
-            if ( node -> value == value ){
-                if ( node == *slhead ){ //头节点的特殊处理
-                    
-                    struct skipListNode *sklevelhead = (*slhead) -> subLayer; 
-                    struct skipListNode *tmp = *slhead ; 
-                    struct skipListNode *preskhead = *slhead; 
-                    (*slhead) = tmp -> next; 
-                    freeSkipListNode(tmp);
-                    while( sklevelhead != NULL ){
-                        
-                        tmp = sklevelhead -> next; 
-                        preskhead -> subLayer = sklevelhead ; 
-                        sklevelhead = sklevelhead -> subLayer ; 
-                    }
-                    node = *slhead; 
-                }else{ //处理非头节点
-                
-                    struct skipListNode *nextnode = node ; //这个地方和下面的算法有关
-                    if (node -> next != NULL ){
-                        while (node != NULL ){
-                            
-                            struct skipListNode *tmp = node->next; 
-                            node -> value = tmp -> value; 
-                            node -> next = tmp -> next; 
-                            node -> subLayer = tmp -> subLayer; 
-                            node = node -> subLayer ; 
-                            freeSkipListNode(tmp);
-                        }
-                        node = nextnode; 
-                    }else{ //最后一个节点
-                        struct skipListNode *levelhead = *slhead;  
-                        while (node !=NULL ){
-                            
-                            struct skipListNode *pre = levelhead; 
-                            while ( pre -> next != node ){
-                                pre = pre -> next; 
-                            }
-                             = NULL; 
-                            node = node -> subLayer; 
-                            freeSkipListNode(pre -> next); 
-                            pre -> next = NULL; 
-                            levelhead = levelhead -> subLayer; 
-                        }
-                        node = NULL; 
-                    } 
-                }
-            }
+    struct skipListLevelHead * levelhead = slhead ; 
+    struct skipListNode * node = slhead -> next ; 
+    struct skipListNode * pre = node ; 
+    while ( node != NULL ){
+        
+        if ( node -> value  > value ){
+            pre = pre -> subLayer ; 
+            node = node -> subLayer ; 
+            levelhead = levelhead -> subLayer; 
+        }else if ( node -> value == value ){
+            break; 
+        }else {
+            pre = node ; 
+            node = node -> next ; 
         }
+    }
+    while ( node != NULL && node -> value == value ){
+        
+        struct skipListNode * freenode = node ; 
+        if (pre == node  ) { //说明是首节点
+            
+            levelhead -> next = node -> next ;
+            node = node -> subLayer ; 
+            pre = node ;  
+        }else {
+            
+            pre -> next = node -> next; 
+            node = node -> subLayer ; 
+            pre  = pre -> subLayer; 
+        }
+        if (levelhead -> next == NULL ){
+            
+            
+            
+        }
+        levelhead = levelhead -> next ; 
     }
 } 
 
