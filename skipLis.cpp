@@ -9,7 +9,9 @@ struct skipListNode *mallocSkipListNode(){
         assert ( sklist == NULL);
         return NULL ; 
     }
-    memset( (char*)sklist,0,sizeof(struct skipListNode));
+    sklist -> next = NULL ; 
+    sklist -> value = 0; 
+    sklist -> subLayer = NULL ; 
     return sklist; 
 }
 struct skipListLevelHead *mallocSkipListHead(){
@@ -19,7 +21,7 @@ struct skipListLevelHead *mallocSkipListHead(){
         assert( slhead ==NULL );
         return NULL ; 
     }
-    slhead -> nxt = NULL; 
+    slhead -> next = NULL; 
     slhead -> nodeNum = 0; 
     slhead -> subLayer = NULL; 
     slhead -> upLayer = NULL; 
@@ -60,14 +62,14 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         
         return false; 
     }
-    int skiplevelCount = 1; //因为这个跳跃表的层次至少为 1  
+    
     if ( slhead == NULL ) {
         
         return false ; 
     }
     struct skipListLevelHead *headnode = slhead ; 
     struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
-    while( headnode -> subLayer != NULL ){   //计算跳跃表层数
+    while( headnode -> subLayer != NULL ){      //计算跳跃表层数
 
         headnode = headnode -> subLayer ; 
     }
@@ -82,7 +84,6 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         struct skipListNode *node = headnode->next;  
         struct skipListNode *pre  = node; 
         while(node -> value <= insertNode -> value){
-
             pre = node; 
             node = node -> next; 
         }
@@ -104,7 +105,6 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         struct skipListNode *downnode = slhead -> next ;
         struct skipListNode *pre = levelhead -> next; 
         while (downnode != NULL ){
-            
             if ( isLiftNode() == false ){
                 downnode = downnode -> next ; 
                 continue ; 
@@ -122,7 +122,6 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
             pre = newnode ; 
             downnode = downnode -> next; 
         }
-        
     }
 }
 
