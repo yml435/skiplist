@@ -11,6 +11,7 @@ struct skipListNode *mallocSkipListNode(){
     sklist -> next = NULL ; 
     sklist -> key = 0; 
     sklist -> subLayer = NULL ; 
+    sklist -> freeValFun = NULL; 
     return sklist; 
 }
 struct skipListLevelHead *mallocSkipListHead(){
@@ -132,12 +133,13 @@ bool liftNodes( struct skipListLevelHead **slhead , struct skipListNode *insertN
     }
 }
 
-bool insertValue(struct skipListLevelHead **slhead,int key ,void *value){
+bool insertValue(struct skipListLevelHead **slhead,int key ,void *value, void(*freevaluefunction)(void* )){
     
     if (slhead  == NULL || *slhead == NULL){
         return false; 
     }
     struct skipListNode * insertNode = mallocSkipListNode();
+    insertNode -> freeValFun = freevaluefunction;
     insertNode -> key = key; 
     insertNode -> value = value; 
     if ((*slhead) -> next == NULL ){ //对空的跳跃表的处理
@@ -205,6 +207,9 @@ bool deleteValue(struct skipListLevelHead **slhead,int key){
             pre -> next = node -> next; 
             node = node -> subLayer ; 
             pre  = pre -> subLayer; 
+        }
+        if (freenode->freeValFun != NULL) {
+            freenode->freeValFun(freenode->value);
         }
         freeSkipListNode(freenode); 
         /*

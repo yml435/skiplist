@@ -11,6 +11,7 @@ struct skipListNode{
     void *value; 
     struct skipListNode *next    ;  //指向下一个节点
     struct skipListNode *subLayer;  //指向跳跃表的下一层节点
+    void(*freeValFun)(void* value); //这个是跳跃表节点值的释放指针
 }; 
 
 typedef struct skipListLevelHead {   //这里每层增加了一个头节点
@@ -21,7 +22,7 @@ typedef struct skipListLevelHead {   //这里每层增加了一个头节点
 	struct skipListLevelHead *upLayer; 
 }*skipList; 
 struct skipListLevelHead *createSkipList() ;
-bool insertValue(struct skipListLevelHead **slhead,int key ,void *value); 
+bool insertValue(struct skipListLevelHead **slhead,int key ,void *value, void(*freevaluefunction)(void*));
 bool deleteValue(struct skipListLevelHead **slhead,int key ) ; 
 void* searchKey(struct skipListLevelHead *slhead, int key);
 void destoryLinkList(struct skipListLevelHead *slhead) ; 

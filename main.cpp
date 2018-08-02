@@ -39,6 +39,7 @@ void printSkipList(skipList list) {
         while (node != NULL) {
             
             std::cout << node->key << ", "; 
+            assert( node->key == *((int*)(node->value))); 
             node = node->next; 
         }
         std::cout << std::endl; 
@@ -46,16 +47,21 @@ void printSkipList(skipList list) {
         list = list -> subLayer;
     } 
 }
+void freeValue(void *value) {
+    free(value);
+}
 int main(){
 	skipList listPointer = (createSkipList()); 
     skipList *list = &listPointer;
     for (int i = 0; i < 100; i++) {
-        insertValue(list, i,NULL);
+        int *insertVal = new int(i); 
+        insertValue(list, i, insertVal, freeValue);
     }
     printSkipList(*list);
     testsubLayerPonter(*list);
-    for (int i=0 ; i< 90;i++)
+    for (int i = 0; i < 90; i++) {
         deleteValue(list, i);
+    }
     printSkipList(*list);
     testsubLayerPonter(*list);
 }
