@@ -169,19 +169,19 @@ bool insertValue(struct skipListLevelHead **slhead,int value ){
     return true; 
 }
 
-bool deleteValue(struct skipListLevelHead *slhead,int value){
+bool deleteValue(struct skipListLevelHead **slhead,int value){
     
     if (slhead == NULL ){
         return false; 
     }
-    struct skipListLevelHead * levelhead = slhead ; 
-    struct skipListNode * node = slhead -> next ; 
+    struct skipListLevelHead * levelhead = *slhead ; 
+    struct skipListNode * node = (*slhead) -> next ; 
     struct skipListNode * pre = node ; 
     while ( node != NULL ){
         
         if ( node -> value  > value ){
             pre = pre -> subLayer ; 
-            node = node -> subLayer ; 
+            node = pre ; 
             levelhead = levelhead -> subLayer; 
         }else if ( node -> value == value ){
             break; 
@@ -204,7 +204,9 @@ bool deleteValue(struct skipListLevelHead *slhead,int value){
             node = node -> subLayer ; 
             pre  = pre -> subLayer; 
         }
-        if (levelhead -> next == NULL ){
+        freeSkipListNode(freenode); 
+        /*
+        if (levelhead -> next == NULL ){ //说明存在空的头节点了
             
             if (levelhead -> upLayer != NULL ){
                 levelhead -> upLayer -> subLayer = levelhead -> subLayer ; 
@@ -212,9 +214,15 @@ bool deleteValue(struct skipListLevelHead *slhead,int value){
             if (levelhead -> subLayer != NULL ){
                 levelhead -> subLayer -> upLayer = levelhead -> upLayer ; 
             }
-        }
+        }*/
         levelhead = levelhead -> subLayer ; 
     }
+    while ((*slhead)->next == NULL) {
+        struct skipListLevelHead * head = (*slhead);
+        (*slhead) = (*slhead)->subLayer; 
+        freeSkipListHead(head); 
+    }
+    return true; 
 } 
 void destorySkipList(struct skipListNode* sknode ){
     
