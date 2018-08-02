@@ -1,6 +1,5 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<assert.h>
+
+#include "skipList.h"
 
 struct skipListNode *mallocSkipListNode(){
     
@@ -29,14 +28,19 @@ struct skipListLevelHead *mallocSkipListHead(){
     
 }
 bool isLiftNode(){
-    
-    return (rand()%2) == 1 ? true : false ; 
+    int randVal = rand(); 
+    if (randVal % 2 == 0) {
+        return true; 
+    }
+    else {
+        return false;  
+    }
 }
 
 
 bool freeSkipListNode(struct skipListNode * slNode){
     
-    if (skNode == NULL){
+	if (slNode == NULL) {
         return false ; 
     }
     free(slNode);
@@ -56,18 +60,18 @@ struct skipListLevelHead *createSkipList(){
     return  mallocSkipListHead();     
 }
 
-bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNode ){
+bool liftNodes( struct skipListLevelHead **slhead , struct skipListNode *insertNode ){
     
-    if ( isLiftNode()){
+    if ( isLiftNode() == false ){
         
         return false; 
     }
     
-    if ( slhead == NULL ) {
+    if ( slhead == NULL || *slhead == NULL ) {
         
         return false ; 
     }
-    struct skipListLevelHead *headnode = slhead ; 
+    struct skipListLevelHead *headnode = *slhead ; 
     struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
     while( headnode -> subLayer != NULL ){      //计算跳跃表层数
 
@@ -78,12 +82,12 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
         这里是在已经有的跳跃层里面进行提升，这种情况下就只需要在新的
         层级里面建立新的跳跃节点就可以了。
     */
-    while ( headnode != slhead ) { //处理至少两层的情况,因为这里在已经存在的表层里面提升
+    while ( headnode != *slhead ) { //处理至少两层的情况,因为这里在已经存在的表层里面提升
         
         headnode = headnode -> upLayer ; 
         struct skipListNode *node = headnode->next;  
         struct skipListNode *pre  = node; 
-        while(node -> value <= insertNode -> value){
+        while(node && node -> value <= insertNode -> value){
             pre = node; 
             node = node -> next; 
         }
@@ -97,19 +101,19 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
     }
     //这里开始提升新的跳跃层，如果最上层的节点数目大于SKIPLEVEL_THRESHOLD
     
-    if ( slhead -> nodeNum > SKIPLEVEL_THRESHOLD ){
+    if ( (*slhead) -> nodeNum > SKIPLEVEL_THRESHOLD ){
         
         struct skipListLevelHead *levelhead = mallocSkipListHead(); 
-        levelhead -> subLayer = slhead ; 
+        levelhead -> subLayer = *slhead ; 
         levelhead -> subLayer -> upLayer = levelhead ; 
-        struct skipListNode *downnode = slhead -> next ;
+        struct skipListNode *downnode = (*slhead) -> next ;
         struct skipListNode *pre = levelhead -> next; 
         while (downnode != NULL ){
             if ( isLiftNode() == false ){
                 downnode = downnode -> next ; 
                 continue ; 
             }
-            struct *newnode = mallocSkipListNode(); 
+	        struct  skipListNode  *newnode = mallocSkipListNode(); 
             newnode -> value = downnode -> value ; 
             newnode -> subLayer = downnode; 
             if ( levelhead -> next == NULL ){
@@ -122,25 +126,26 @@ bool liftNodes( struct skipListLevelHead *slhead , struct skipListNode *insertNo
             pre = newnode ; 
             downnode = downnode -> next; 
         }
+        *slhead = levelhead; 
     }
 }
 
-bool insertValue(struct skipListLevelHead *slhead,int value ){
+bool insertValue(struct skipListLevelHead **slhead,int value ){
     
-    if (slhead  == NULL ){
+    if (slhead  == NULL || *slhead == NULL){
         return false; 
     }
     struct skipListNode * insertNode = mallocSkipListNode();
     insertNode -> value = value; 
     
-    if (slhead -> next == NULL ){ //对空的跳跃表的处理
+    if ((*slhead) -> next == NULL ){ //对空的跳跃表的处理
         
-        slhead -> next = insertNode ; 
-        slhead -> nodeNum ++ ; 
+        (*slhead) -> next = insertNode ; 
+        (*slhead) -> nodeNum ++ ; 
         liftNodes(slhead,insertNode); 
         return true; 
     }
-    struct skipListLevelHead *levelhead = slhead; 
+    struct skipListLevelHead *levelhead = *slhead; 
     struct skipListNode * pre = levelhead -> next ; 
     struct skipListNode * node = pre; 
     while( node -> subLayer != NULL ){  //因为插入是插入到最底层，最底层的长度肯定比上面长度要长的
@@ -222,14 +227,14 @@ void destorySkipList(struct skipListNode* sknode ){
 }
 void destoryLinkList(struct skipListLevelHead *sklist){
     
-    if (list == NULL ){
+	if (sklist == NULL) {
         return ; 
     }
     struct skipListLevelHead *levelhead = sklist ; 
     while ( levelhead != NULL ){
         
         destorySkipList(levelhead -> next ); 
-        levelhead = levelhead -> next ; 
+	    levelhead = levelhead -> subLayer; 
     }
 }
 

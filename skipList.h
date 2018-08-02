@@ -1,25 +1,27 @@
 #ifndef SKIP_LIST_H
 #define SKIP_LIST_H
-
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
 
 #define MIN_INT               -0xFFFF
-#define SKIPLEVEL_THRESHOLD   10
+#define SKIPLEVEL_THRESHOLD   5
 struct skipListNode{
 
     int value ; 
-    struct skipListNode *next    ;  //æŒ‡å‘ä¸‹ä¸€ä¸ªèŠ‚ç‚¹
-    struct skipListNode *subLayer;  //æŒ‡å‘è·³è·ƒè¡¨çš„ä¸‹ä¸€å±‚èŠ‚ç‚¹
+    struct skipListNode *next    ;  //Ö¸ÏòÏÂÒ»¸ö½Úµã
+    struct skipListNode *subLayer;  //Ö¸ÏòÌøÔ¾±íµÄÏÂÒ»²ã½Úµã
 }; 
 
-typedef struct skipListLevelHead{   //è¿™é‡Œæ¯å±‚å¢åŠ äº†ä¸€ä¸ªå¤´èŠ‚ç‚¹
+typedef struct skipListLevelHead {   //ÕâÀïÃ¿²ãÔö¼ÓÁËÒ»¸öÍ·½Úµã
     
-    struct skipListNode *next; 
-    int    nodeNum ; 
-    struct skipListLevelHead *subLayer; 
-    struct skipListLevelHead *upLayer; 
-}skipList; 
-struct skipListNode *createSkipList() ;
-bool insertValue(struct skipListLevelHead *slhead,int value ); 
+	struct skipListNode *next; 
+	int    nodeNum; 
+	struct skipListLevelHead *subLayer; 
+	struct skipListLevelHead *upLayer; 
+}*skipList; 
+struct skipListLevelHead *createSkipList() ;
+bool insertValue(struct skipListLevelHead **slhead,int value ); 
 bool deleteValue(struct skipListLevelHead *slhead,int value) ; 
 void destoryLinkList(struct skipListLevelHead *slhead) ; 
 
