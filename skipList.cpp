@@ -248,4 +248,30 @@ void destoryLinkList(struct skipListLevelHead *sklist){
     }
 }
 
+void* searchKey(struct skipListLevelHead *slhead, int key) {
 
+    if (slhead == NULL) {
+        return NULL;
+    }
+    void *searchedVal = NULL; 
+    struct skipListLevelHead * levelhead = slhead;
+    struct skipListNode * node = slhead ->next;
+    struct skipListNode * pre = node;
+
+    while (node != NULL) {
+
+        if (node->key  > key) {
+            pre = pre->subLayer;
+            node = pre;
+            levelhead = levelhead->subLayer;
+        }
+        else if (node->key == key) {
+            searchedVal =  node->value;
+        }
+        else {
+            pre = node;
+            node = node->next;
+        }
+    }
+    return searchedVal;
+}

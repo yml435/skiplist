@@ -4,8 +4,7 @@
 #include<stdlib.h>
 #include<assert.h>
 
-#define MIN_INT               -0xFFFF
-#define SKIPLEVEL_THRESHOLD   5
+#define SKIPLEVEL_THRESHOLD   20
 struct skipListNode{
 
     int key ; 
@@ -24,6 +23,6 @@ typedef struct skipListLevelHead {   //这里每层增加了一个头节点
 struct skipListLevelHead *createSkipList() ;
 bool insertValue(struct skipListLevelHead **slhead,int key ,void *value); 
 bool deleteValue(struct skipListLevelHead **slhead,int key ) ; 
+void* searchKey(struct skipListLevelHead *slhead, int key);
 void destoryLinkList(struct skipListLevelHead *slhead) ; 
-
 #endif 
