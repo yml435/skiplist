@@ -212,16 +212,6 @@ bool deleteValue(struct skipListLevelHead **slhead,int key){
             freenode->freeValFun(freenode->value);
         }
         freeSkipListNode(freenode); 
-        /*
-        if (levelhead -> next == NULL ){ //说明存在空的头节点了
-            
-            if (levelhead -> upLayer != NULL ){
-                levelhead -> upLayer -> subLayer = levelhead -> subLayer ; 
-            }
-            if (levelhead -> subLayer != NULL ){
-                levelhead -> subLayer -> upLayer = levelhead -> upLayer ; 
-            }
-        }*/
         levelhead = levelhead -> subLayer ; 
     }
     while ((*slhead)->next == NULL) {
