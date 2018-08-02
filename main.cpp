@@ -64,4 +64,5 @@ int main(){
     }
     printSkipList(*list);
     testsubLayerPonter(*list);
+    destoryLinkList(*list);
 }

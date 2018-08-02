@@ -237,6 +237,9 @@ void destorySkipList(struct skipListNode* sknode ){
         return ; 
     }
     skipListNode * nxtsknode = sknode -> next ; 
+    if (sknode->freeValFun != NULL) {
+        sknode->freeValFun(sknode->value);
+    }
     freeSkipListNode(sknode); 
     destorySkipList(nxtsknode); 
 }
