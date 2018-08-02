@@ -5,6 +5,7 @@
 #include<assert.h>
 
 #define SKIPLEVEL_THRESHOLD   20
+
 struct skipListNode{
 
     int key ; 
@@ -21,6 +22,7 @@ typedef struct skipListLevelHead {   //这里每层增加了一个头节点
 	struct skipListLevelHead *subLayer; 
 	struct skipListLevelHead *upLayer; 
 }*skipList; 
+
 struct skipListLevelHead *createSkipList() ;
 bool insertValue(struct skipListLevelHead **slhead,int key ,void *value, void(*freevaluefunction)(void*));
 bool deleteValue(struct skipListLevelHead **slhead,int key ) ; 

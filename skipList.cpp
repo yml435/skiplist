@@ -32,8 +32,7 @@ bool isLiftNode(){
     int randVal = rand(); 
     if (randVal % 2 == 0) {
         return true; 
-    }
-    else {
+    }else {
         return false;  
     }
 }
@@ -64,13 +63,11 @@ struct skipListLevelHead *createSkipList(){
 bool liftNodes( struct skipListLevelHead **slhead , struct skipListNode *insertNode ){
     
     if ( isLiftNode() == false ){
-        
         return false; 
     }
     
     if ( slhead == NULL || *slhead == NULL ) {
-        
-        return false ; 
+         return false ; 
     }
     struct skipListLevelHead *headnode = *slhead ; 
     struct skipListNode *subnode = insertNode ;  //保存下一层新增的节点 
