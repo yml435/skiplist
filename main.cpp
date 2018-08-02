@@ -9,18 +9,18 @@ void testsubLayerPonter(skipList list) {
         
         struct skipListNode *node = list->next; 
         while (node != NULL) {
-            if (searchedValue[node->value] == true) {
+            if (searchedValue[node->key] == true) {
                 node = node->next; 
                 continue; 
             }
-            std::cout << node->value << ","; 
+            std::cout << node->key << ","; 
             struct skipListNode * subnode = node->subLayer; 
             while (subnode != NULL) {
-                std::cout << subnode->value << ",";
-                assert(node->value == subnode->value);
+                std::cout << subnode->key << ",";
+                assert(node->key == subnode->key);
                 subnode = subnode->subLayer; 
             }
-            searchedValue[node->value] = true; 
+            searchedValue[node->key] = true; 
             std::cout << std::endl; 
             node = node->next;         
         }
@@ -38,7 +38,7 @@ void printSkipList(skipList list) {
         struct skipListNode *node = list->next; 
         while (node != NULL) {
             
-            std::cout << node->value << ", "; 
+            std::cout << node->key << ", "; 
             node = node->next; 
         }
         std::cout << std::endl; 
@@ -50,7 +50,7 @@ int main(){
 	skipList listPointer = (createSkipList()); 
     skipList *list = &listPointer;
     for (int i = 0; i < 100; i++) {
-        insertValue(list, i);
+        insertValue(list, i,NULL);
     }
     printSkipList(*list);
     testsubLayerPonter(*list);

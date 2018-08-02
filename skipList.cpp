@@ -9,7 +9,7 @@ struct skipListNode *mallocSkipListNode(){
         return NULL ; 
     }
     sklist -> next = NULL ; 
-    sklist -> value = 0; 
+    sklist -> key = 0; 
     sklist -> subLayer = NULL ; 
     return sklist; 
 }
@@ -87,12 +87,13 @@ bool liftNodes( struct skipListLevelHead **slhead , struct skipListNode *insertN
         headnode = headnode -> upLayer ; 
         struct skipListNode *node = headnode->next;  
         struct skipListNode *pre  = node; 
-        while(node && node -> value <= insertNode -> value){
+        while(node && node -> key <= insertNode -> key){
             pre = node; 
             node = node -> next; 
         }
         struct skipListNode *newnode = mallocSkipListNode(); 
         newnode -> subLayer = subnode; 
+        newnode -> key = insertNode -> key; 
         newnode -> value = insertNode -> value; 
         pre -> next = newnode; 
         newnode -> next = node; 
@@ -114,7 +115,8 @@ bool liftNodes( struct skipListLevelHead **slhead , struct skipListNode *insertN
                 continue ; 
             }
 	        struct  skipListNode  *newnode = mallocSkipListNode(); 
-            newnode -> value = downnode -> value ; 
+            newnode -> key = downnode -> key ; 
+            newnode -> value = downnode ->value; 
             newnode -> subLayer = downnode; 
             if ( levelhead -> next == NULL ){
                 
@@ -130,14 +132,14 @@ bool liftNodes( struct skipListLevelHead **slhead , struct skipListNode *insertN
     }
 }
 
-bool insertValue(struct skipListLevelHead **slhead,int value ){
+bool insertValue(struct skipListLevelHead **slhead,int key ,void *value){
     
     if (slhead  == NULL || *slhead == NULL){
         return false; 
     }
     struct skipListNode * insertNode = mallocSkipListNode();
+    insertNode -> key = key; 
     insertNode -> value = value; 
-    
     if ((*slhead) -> next == NULL ){ //对空的跳跃表的处理
         
         (*slhead) -> next = insertNode ; 
@@ -149,7 +151,7 @@ bool insertValue(struct skipListLevelHead **slhead,int value ){
     struct skipListNode * pre = levelhead -> next ; 
     struct skipListNode * node = pre; 
     while( node -> subLayer != NULL ){  //因为插入是插入到最底层，最底层的长度肯定比上面长度要长的
-        while (( node != NULL )&&( node -> value <= value )){
+        while (( node != NULL )&&( node -> key <= key )){
             pre = node ;  
             node = node -> next; 
         }
@@ -157,7 +159,7 @@ bool insertValue(struct skipListLevelHead **slhead,int value ){
         levelhead = levelhead -> subLayer; 
     } 
     
-    while (( node != NULL )&&( node -> value <= value )){  //这里是对最底层的操作 
+    while (( node != NULL )&&( node -> key <= key )){  //这里是对最底层的操作 
         pre = node ; 
         node = node -> next; 
     }
@@ -169,7 +171,7 @@ bool insertValue(struct skipListLevelHead **slhead,int value ){
     return true; 
 }
 
-bool deleteValue(struct skipListLevelHead **slhead,int value){
+bool deleteValue(struct skipListLevelHead **slhead,int key){
     
     if (slhead == NULL ){
         return false; 
@@ -179,18 +181,18 @@ bool deleteValue(struct skipListLevelHead **slhead,int value){
     struct skipListNode * pre = node ; 
     while ( node != NULL ){
         
-        if ( node -> value  > value ){
+        if ( node -> key  > key ){
             pre = pre -> subLayer ; 
             node = pre ; 
             levelhead = levelhead -> subLayer; 
-        }else if ( node -> value == value ){
+        }else if ( node -> key == key ){
             break; 
         }else {
             pre = node ; 
             node = node -> next ; 
         }
     }
-    while ( node != NULL && node -> value == value ){
+    while ( node != NULL && node -> key == key ){
         
         struct skipListNode * freenode = node ; 
         if (pre == node  ) { //说明是首节点

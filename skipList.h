@@ -8,7 +8,8 @@
 #define SKIPLEVEL_THRESHOLD   5
 struct skipListNode{
 
-    int value ; 
+    int key ; 
+    void *value; 
     struct skipListNode *next    ;  //指向下一个节点
     struct skipListNode *subLayer;  //指向跳跃表的下一层节点
 }; 
@@ -21,8 +22,8 @@ typedef struct skipListLevelHead {   //这里每层增加了一个头节点
 	struct skipListLevelHead *upLayer; 
 }*skipList; 
 struct skipListLevelHead *createSkipList() ;
-bool insertValue(struct skipListLevelHead **slhead,int value ); 
-bool deleteValue(struct skipListLevelHead **slhead,int value) ; 
+bool insertValue(struct skipListLevelHead **slhead,int key ,void *value); 
+bool deleteValue(struct skipListLevelHead **slhead,int key ) ; 
 void destoryLinkList(struct skipListLevelHead *slhead) ; 
 
 #endif 
