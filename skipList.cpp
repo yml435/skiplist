@@ -262,6 +262,7 @@ void* searchKey(struct skipListLevelHead *slhead, int key) {
         }
         else if (node->key == key) {
             searchedVal =  node->value;
+            break; 
         }
         else {
             pre = node;

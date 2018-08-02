@@ -1,10 +1,12 @@
 ﻿#include"skipList.h"
 #include<iostream>
-
+#include<string.h>
+#include <cstdlib>
+#include <ctime>
 void testsubLayerPonter(skipList list) {
 
-    bool searchedValue[1024] = { false };
-
+    int *searchedValue = new int[100000];
+    memset(searchedValue, 0, sizeof(int) * 100000);
     while (list != NULL) {
         
         struct skipListNode *node = list->next; 
@@ -51,18 +53,29 @@ void freeValue(void *value) {
     free(value);
 }
 int main(){
+    clock_t start_time, end_time;
 	skipList listPointer = (createSkipList()); 
     skipList *list = &listPointer;
-    for (int i = 0; i < 100; i++) {
+    start_time = clock();
+    for (int i = 0; i < 10000; i++) {
         int *insertVal = new int(i); 
         insertValue(list, i, insertVal, freeValue);
     }
-    printSkipList(*list);
+    end_time = clock();
+    std::cout << "创建消耗时间: " << (double)(end_time - start_time) / CLOCKS_PER_SEC << std::endl;
+    /*printSkipList(*list);
     testsubLayerPonter(*list);
-    for (int i = 0; i < 90; i++) {
+    for (int i = 0; i < 9000; i++) {
         deleteValue(list, i);
     }
     printSkipList(*list);
     testsubLayerPonter(*list);
-    destoryLinkList(*list);
+    destoryLinkList(*list);*/
+
+    start_time = clock();
+    for (int i = 0; i < 10000; i++) {
+        searchKey(*list, i);    
+    }
+    end_time = clock(); 
+    std::cout << "查询消耗时间: " << (double)(end_time - start_time) / CLOCKS_PER_SEC << std::endl;
 }
