@@ -63,14 +63,16 @@ int main(){
     }
     end_time = clock();
     std::cout << "创建消耗时间: " << (double)(end_time - start_time) / CLOCKS_PER_SEC << std::endl;
-    /*printSkipList(*list);
+    printSkipList(*list);
+    printSkipList(*list);
     testsubLayerPonter(*list);
+    std::cout << "------------------------删除---------------------" << std::endl; 
     for (int i = 0; i < 9000; i++) {
         deleteValue(list, i);
     }
     printSkipList(*list);
     testsubLayerPonter(*list);
-    destoryLinkList(*list);*/
+    destoryLinkList(*list);
 
     start_time = clock();
     for (int i = 0; i < 10000; i++) {
